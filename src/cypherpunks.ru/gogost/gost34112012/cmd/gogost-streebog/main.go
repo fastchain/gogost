@@ -19,15 +19,27 @@ package main
 
 import (
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io"
 	"os"
 
+	"cypherpunks.ru/gogost"
 	"cypherpunks.ru/gogost/gost34112012"
 )
 
+var (
+	digestSize = flag.Int("size", 256, "Digest size (either 256 or 512)")
+	version    = flag.Bool("version", false, "Print version information")
+)
+
 func main() {
-	h := gost34112012.New(256)
+	flag.Parse()
+	if *version {
+		fmt.Println(gogost.Version)
+		return
+	}
+	h := gost34112012.New(*digestSize)
 	io.Copy(h, os.Stdin)
 	fmt.Println(hex.EncodeToString(h.Sum(nil)))
 }
