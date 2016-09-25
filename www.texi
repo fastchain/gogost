@@ -20,7 +20,9 @@ Currently supported algorithms are:
 
 @itemize
 @item GOST 28147-89 (@url{https://tools.ietf.org/html/rfc5830.html, RFC 5830})
-    block cipher with ECB, CNT (CTR), CFB, MAC, modes of operation
+    block cipher with ECB, CNT (CTR), CFB, MAC,
+    CBC (@url{https://tools.ietf.org/html/rfc4357.html, RFC 4357})
+    modes of operation
 @item various 28147-89-related S-boxes included
 @item GOST R 34.11-94 hash function
     (@url{https://tools.ietf.org/html/rfc5831.html, RFC 5831})
