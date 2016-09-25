@@ -35,6 +35,7 @@ Currently supported algorithms are:
 @item various 34.10 curve parameters included
 @item GOST R 34.12-2015 128-bit block cipher Кузнечик (Kuznechik)
     (@url{https://tools.ietf.org/html/rfc7801.html, RFC 7801})
+@item GOST R 34.13-2015 padding methods
 @end itemize
 
 Please send questions, bug reports and patches to
