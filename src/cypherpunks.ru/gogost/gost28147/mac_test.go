@@ -17,8 +17,8 @@
 package gost28147
 
 import (
+	"bytes"
 	"crypto/rand"
-	"crypto/subtle"
 	"hash"
 	"testing"
 	"testing/quick"
@@ -35,13 +35,13 @@ func TestMACVectors(t *testing.T) {
 	}
 
 	m.Write([]byte("a"))
-	if subtle.ConstantTimeCompare(m.Sum(nil), []byte{0xbd, 0x5d, 0x3b, 0x5b, 0x2b, 0x7b, 0x57, 0xaf}) != 1 {
+	if bytes.Compare(m.Sum(nil), []byte{0xbd, 0x5d, 0x3b, 0x5b, 0x2b, 0x7b, 0x57, 0xaf}) != 0 {
 		t.Fail()
 	}
 
 	m.Reset()
 	m.Write([]byte("abc"))
-	if subtle.ConstantTimeCompare(m.Sum(nil), []byte{0x28, 0x66, 0x1e, 0x40, 0x80, 0x5b, 0x1f, 0xf9}) != 1 {
+	if bytes.Compare(m.Sum(nil), []byte{0x28, 0x66, 0x1e, 0x40, 0x80, 0x5b, 0x1f, 0xf9}) != 0 {
 		t.Fail()
 	}
 
@@ -49,7 +49,7 @@ func TestMACVectors(t *testing.T) {
 	for i := 0; i < 128; i++ {
 		m.Write([]byte("U"))
 	}
-	if subtle.ConstantTimeCompare(m.Sum(nil), []byte{0x1a, 0x06, 0xd1, 0xba, 0xd7, 0x45, 0x80, 0xef}) != 1 {
+	if bytes.Compare(m.Sum(nil), []byte{0x1a, 0x06, 0xd1, 0xba, 0xd7, 0x45, 0x80, 0xef}) != 0 {
 		t.Fail()
 	}
 
@@ -57,7 +57,7 @@ func TestMACVectors(t *testing.T) {
 	for i := 0; i < 13; i++ {
 		m.Write([]byte("x"))
 	}
-	if subtle.ConstantTimeCompare(m.Sum(nil), []byte{0x91, 0x7e, 0xe1, 0xf1, 0xa6, 0x68, 0xfb, 0xd3}) != 1 {
+	if bytes.Compare(m.Sum(nil), []byte{0x91, 0x7e, 0xe1, 0xf1, 0xa6, 0x68, 0xfb, 0xd3}) != 0 {
 		t.Fail()
 	}
 }
@@ -91,7 +91,7 @@ func TestMACRandom(t *testing.T) {
 		m.Write(data)
 		m.Sum(tag2)
 
-		return subtle.ConstantTimeCompare(tag1, tag2) == 1
+		return bytes.Compare(tag1, tag2) == 0
 	}
 	if err := quick.Check(f, nil); err != nil {
 		t.Error(err)

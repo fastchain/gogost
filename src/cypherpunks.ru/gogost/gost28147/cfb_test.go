@@ -17,9 +17,9 @@
 package gost28147
 
 import (
+	"bytes"
 	"crypto/cipher"
 	"crypto/rand"
-	"crypto/subtle"
 	"testing"
 	"testing/quick"
 )
@@ -45,12 +45,12 @@ func TestCFBCryptomanager(t *testing.T) {
 	tmp := make([]byte, 16)
 	fe := c.NewCFBEncrypter(iv)
 	fe.XORKeyStream(tmp, pt)
-	if subtle.ConstantTimeCompare(tmp, ct) != 1 {
+	if bytes.Compare(tmp, ct) != 0 {
 		t.Fail()
 	}
 	fd := c.NewCFBDecrypter(iv)
 	fd.XORKeyStream(tmp, ct)
-	if subtle.ConstantTimeCompare(tmp, pt) != 1 {
+	if bytes.Compare(tmp, pt) != 0 {
 		t.Fail()
 	}
 }
@@ -71,7 +71,7 @@ func TestCFBRandom(t *testing.T) {
 		fd := c.NewCFBDecrypter(iv)
 		pt2 := make([]byte, len(ct))
 		fd.XORKeyStream(pt2, ct)
-		return subtle.ConstantTimeCompare(pt2, pt) == 1
+		return bytes.Compare(pt2, pt) == 0
 	}
 	if err := quick.Check(f, nil); err != nil {
 		t.Error(err)

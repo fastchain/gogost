@@ -53,7 +53,7 @@ var (
 		192, 209, 102, 175, 194, 57, 75, 99, 182,
 	}
 	piInv [256]byte
-	cBlk     [32]*[BlockSize]byte
+	cBlk  [32]*[BlockSize]byte
 )
 
 func gf(a, b byte) (c byte) {

@@ -17,9 +17,9 @@
 package gost28147
 
 import (
+	"bytes"
 	"crypto/cipher"
 	"crypto/rand"
-	"crypto/subtle"
 	"testing"
 	"testing/quick"
 )
@@ -105,12 +105,12 @@ func TestCTRGCL3Vector(t *testing.T) {
 	ctr := c.NewCTR(iv)
 	tmp := make([]byte, len(plaintext))
 	ctr.XORKeyStream(tmp, plaintext)
-	if subtle.ConstantTimeCompare(tmp, ciphertext) != 1 {
+	if bytes.Compare(tmp, ciphertext) != 0 {
 		t.Fail()
 	}
 	ctr = c.NewCTR(iv)
 	ctr.XORKeyStream(tmp, tmp)
-	if subtle.ConstantTimeCompare(tmp, plaintext) != 1 {
+	if bytes.Compare(tmp, plaintext) != 0 {
 		t.Fail()
 	}
 }
@@ -146,12 +146,12 @@ func TestCTRGCL2Vector(t *testing.T) {
 	ctr := c.NewCTR(iv)
 	tmp := make([]byte, len(plaintext))
 	ctr.XORKeyStream(tmp, plaintext)
-	if subtle.ConstantTimeCompare(tmp, ciphertext) != 1 {
+	if bytes.Compare(tmp, ciphertext) != 0 {
 		t.Fail()
 	}
 	ctr = c.NewCTR(iv)
 	ctr.XORKeyStream(tmp, tmp)
-	if subtle.ConstantTimeCompare(tmp, plaintext) != 1 {
+	if bytes.Compare(tmp, plaintext) != 0 {
 		t.Fail()
 	}
 }
@@ -171,7 +171,7 @@ func TestCTRRandom(t *testing.T) {
 		ctr.XORKeyStream(tmp, pt)
 		ctr = c.NewCTR(iv)
 		ctr.XORKeyStream(tmp, tmp)
-		return subtle.ConstantTimeCompare(tmp, pt) == 1
+		return bytes.Compare(tmp, pt) == 0
 	}
 	if err := quick.Check(f, nil); err != nil {
 		t.Error(err)
