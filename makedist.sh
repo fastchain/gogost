@@ -10,6 +10,7 @@ cd $tmp/gogost-$release
 git checkout $release
 
 find . -name .git -type d | xargs rm -fr
+rm -f www* makedist* TODO
 
 cd ..
 tar cvf gogost-"$release".tar gogost-"$release"
@@ -20,6 +21,14 @@ tarball=gogost-"$release".tar.xz
 size=$(( $(wc -c < $tarball) / 1024 ))
 hash=$(gpg --print-md SHA256 < $tarball)
 hashsb=$($HOME/work/gogost/gogost-streebog < $tarball)
+
+cat <<EOF
+An entry for documentation:
+@item $release @tab $size KiB
+@tab @url{gogost-${release}.tar.xz, link} @url{gogost-${release}.tar.xz.sig, sign}
+@tab @code{$hash}
+@tab @code{$hashsb}
+EOF
 
 cat <<EOF
 Subject: GoGOST $release release announcement
